@@ -60,5 +60,14 @@ dependencies {
     //loading-animation
     implementation ("pl.droidsonroids.gif:android-gif-drawable:1.2.17")
 
+    //retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    //glide
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    // Glide v4 uses this new annotation processor -- see https://bumptech.github.io/glide/doc/generatedapi.html
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+
 
 }
