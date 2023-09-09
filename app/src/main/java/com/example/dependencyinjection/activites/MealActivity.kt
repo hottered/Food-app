@@ -30,10 +30,12 @@ class MealActivity : AppCompatActivity() {
 
         mealMvvm = ViewModelProviders.of(this)[MealViewModel::class.java]
 
+
         getRandomMealInformationFromIntent()
         setInformationInViews()
 
         loadingCase()
+
         mealMvvm.getMealDetail(mealId)
 
         observeMealDetailsLiveData()
@@ -71,6 +73,7 @@ class MealActivity : AppCompatActivity() {
     }
 
     private fun getRandomMealInformationFromIntent() {
+
         val intent = intent
         mealId = intent.getStringExtra(HomeFragment.MEAL_ID)!!
         mealName = intent.getStringExtra(HomeFragment.MEAL_NAME)!!

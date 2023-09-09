@@ -9,20 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.dependencyinjection.R
 import com.example.dependencyinjection.activites.MealActivity
+import com.example.dependencyinjection.adapters.CategoriesAdapter
 import com.example.dependencyinjection.adapters.MostPopularMealsAdapter
 import com.example.dependencyinjection.databinding.FragmentHomeBinding
 import com.example.dependencyinjection.pojo.Meal
-import com.example.dependencyinjection.pojo.MealList
-import com.example.dependencyinjection.retrofit.CategoryMeals
-import com.example.dependencyinjection.retrofit.RetrofitInstance
+import com.example.dependencyinjection.pojo.MealsByCategory
 import com.example.dependencyinjection.viewModel.HomeViewModel
-import retrofit2.Call
-import retrofit2.Response
-import javax.security.auth.callback.Callback
 
 class HomeFragment : Fragment() {
 
@@ -30,6 +26,7 @@ class HomeFragment : Fragment() {
     private lateinit var homeMvvm: HomeViewModel
     private lateinit var randomMeal: Meal
     private lateinit var popularItemsAdapter: MostPopularMealsAdapter
+    private lateinit var categoriesAdapter: CategoriesAdapter
 
     companion object {
         const val MEAL_ID = "com.example.easyfood.idMeal"
@@ -59,21 +56,40 @@ class HomeFragment : Fragment() {
         preparePopularItemsRecyclerView()
 
         homeMvvm.getRandomMeal()
-        observeRandoMeal()
+        observeRandomMeal()
         onRandomMealClicked()
 
         homeMvvm.getPopularItems()
         observePopularItemsLiveData()
         onPopularItemClick()
 
+        prepareCategoriesRecyclerView()
+        homeMvvm.getCategories()
+        observeCategoriesLiveData()
+
+    }
+
+    private fun prepareCategoriesRecyclerView() {
+        categoriesAdapter = CategoriesAdapter()
+        binding.recViewCategories.apply {
+            layoutManager = GridLayoutManager(context, 3, GridLayoutManager.VERTICAL, false)
+            adapter = categoriesAdapter
+        }
+    }
+
+    private fun observeCategoriesLiveData() {
+        homeMvvm.observeCategoriesLivedata().observe(viewLifecycleOwner, Observer { categories ->
+            categoriesAdapter.setCategoryList(categories)
+        })
+
     }
 
     private fun onPopularItemClick() {
         popularItemsAdapter.onItemClick = { meal ->
-            val intent = Intent(activity,MealActivity::class.java)
-            intent.putExtra(MEAL_ID,meal.idMeal)
-            intent.putExtra(MEAL_NAME,meal.strMeal)
-            intent.putExtra(MEAL_THUMB,meal.strMealThumb)
+            val intent = Intent(activity, MealActivity::class.java)
+            intent.putExtra(MEAL_ID, meal.idMeal)
+            intent.putExtra(MEAL_NAME, meal.strMeal)
+            intent.putExtra(MEAL_THUMB, meal.strMealThumb)
             startActivity(intent)
         }
     }
@@ -88,7 +104,7 @@ class HomeFragment : Fragment() {
     private fun observePopularItemsLiveData() {
         homeMvvm.observePopularItemsLivedata().observe(viewLifecycleOwner,
             { mealsList ->
-                popularItemsAdapter.setMeals(mealsList = mealsList as ArrayList<CategoryMeals>)
+                popularItemsAdapter.setMeals(mealsList = mealsList as ArrayList<MealsByCategory>)
             })
     }
 
@@ -102,7 +118,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun observeRandoMeal() {
+    private fun observeRandomMeal() {
         homeMvvm.observeRandomMealLivedata().observe(
             viewLifecycleOwner,
         ) { meal ->
