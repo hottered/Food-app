@@ -2,6 +2,7 @@ package com.example.dependencyinjection.retrofit
 
 import com.example.dependencyinjection.pojo.CategoryList
 import com.example.dependencyinjection.pojo.MealList
+import com.example.dependencyinjection.pojo.MealsByCategory
 import com.example.dependencyinjection.pojo.MealsByCategoryList
 import retrofit2.Call
 import retrofit2.http.GET
@@ -20,5 +21,8 @@ interface MealApi {
 
     @GET("categories.php")
     fun getCategories() : Call<CategoryList>
+
+    @GET("filter.php")
+    fun getMealsByCategory(@Query("c") categoryName: String) : Call<MealsByCategoryList>
 
 }

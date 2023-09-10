@@ -12,10 +12,12 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.dependencyinjection.activites.CategoryMealsActivity
 import com.example.dependencyinjection.activites.MealActivity
 import com.example.dependencyinjection.adapters.CategoriesAdapter
 import com.example.dependencyinjection.adapters.MostPopularMealsAdapter
 import com.example.dependencyinjection.databinding.FragmentHomeBinding
+import com.example.dependencyinjection.pojo.Category
 import com.example.dependencyinjection.pojo.Meal
 import com.example.dependencyinjection.pojo.MealsByCategory
 import com.example.dependencyinjection.viewModel.HomeViewModel
@@ -32,6 +34,7 @@ class HomeFragment : Fragment() {
         const val MEAL_ID = "com.example.easyfood.idMeal"
         const val MEAL_NAME = "com.example.easyfood.nameMeal"
         const val MEAL_THUMB = "com.example.easyfood.thumbMeal"
+        const val CATEGORY_NAME = "com.example.easyfood.categoryName"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +69,17 @@ class HomeFragment : Fragment() {
         prepareCategoriesRecyclerView()
         homeMvvm.getCategories()
         observeCategoriesLiveData()
+        onCategoryItemClick()
 
+    }
+
+    private fun onCategoryItemClick() {
+        categoriesAdapter.onItemClick = {category ->
+            val intent = Intent(activity,CategoryMealsActivity::class.java)
+            intent.putExtra(CATEGORY_NAME,category.strCategory)
+            startActivity(intent)
+
+        }
     }
 
     private fun prepareCategoriesRecyclerView() {

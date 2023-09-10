@@ -13,7 +13,9 @@ class CategoriesAdapter() : RecyclerView.Adapter<CategoriesAdapter.CategoryViewH
 
     private var categoriesList = ArrayList<Category>()
 
-    fun setCategoryList(categoriesList:List<Category>){
+    var onItemClick: ((Category) -> Unit)? = null
+
+    fun setCategoryList(categoriesList: List<Category>) {
         this.categoriesList = categoriesList as ArrayList<Category>
         notifyDataSetChanged()
     }
@@ -22,9 +24,7 @@ class CategoriesAdapter() : RecyclerView.Adapter<CategoriesAdapter.CategoryViewH
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         return CategoryViewHolder(
             CategoryItemBinding.inflate(
-                LayoutInflater.from(parent.context)
-                ,parent
-                ,false
+                LayoutInflater.from(parent.context), parent, false
             )
         )
     }
@@ -38,8 +38,13 @@ class CategoriesAdapter() : RecyclerView.Adapter<CategoriesAdapter.CategoryViewH
             .load(this.categoriesList[position].strCategoryThumb)
             .into(holder.binding.imageView)
         holder.binding.tvCategoryName.text = categoriesList[position].strCategory
+
+        holder.itemView.setOnClickListener {
+            onItemClick!!.invoke(categoriesList[position])
+        }
     }
 
-    inner class CategoryViewHolder(val binding: CategoryItemBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class CategoryViewHolder(val binding: CategoryItemBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
 }
