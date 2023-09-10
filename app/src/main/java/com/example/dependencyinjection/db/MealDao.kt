@@ -12,14 +12,11 @@ import com.example.dependencyinjection.pojo.Meal
 @Dao
 interface MealDao {
 
-    @Insert
-    suspend fun insertMeal(meal: Meal)
-
-    @Update
-    suspend fun updateMeal(meal: Meal)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertOrUpdateMeal(meal: Meal)
 
     @Delete
-    suspend fun deleteMeal(meal: Meal)
+    fun deleteMeal(meal: Meal)
 
     @Query("SELECT * FROM mealInformation")
     fun getAllMeals() : LiveData<List<Meal>>

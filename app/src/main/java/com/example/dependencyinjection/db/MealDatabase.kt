@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.dependencyinjection.pojo.Meal
 
-@Database(entities = [Meal::class], version = 1)
+@Database(entities = [Meal::class], version = 1, exportSchema = false)
 @TypeConverters(MealTypeConverter::class)
 abstract class MealDatabase : RoomDatabase() {
 
@@ -22,6 +22,7 @@ abstract class MealDatabase : RoomDatabase() {
             if (INSTANCE == null) {
                 INSTANCE = Room.databaseBuilder(context, MealDatabase::class.java, "meal_db")
                     .fallbackToDestructiveMigration()
+                    .allowMainThreadQueries()
                     .build()
             }
             return INSTANCE as MealDatabase

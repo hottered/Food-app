@@ -1,7 +1,9 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    kotlin("kapt")
+//    kotlin("kapt")
+
+    id("kotlin-kapt")
 }
 
 android {
@@ -51,7 +53,7 @@ dependencies {
 
     val nav_version = "2.3.5"
     val lifecycle_version = "2.4.0"
-    val room_version = "2.3.0"
+    val room_version = "2.1.0-beta01"
     //navigation-components
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
@@ -65,7 +67,7 @@ dependencies {
 
     //retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.3.0")
 
     //glide
     implementation ("com.github.bumptech.glide:glide:4.12.0")
@@ -76,12 +78,18 @@ dependencies {
     //viewmodel
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
-    implementation ("androidx.lifecycle:lifecycle-extensions:2.1.0")
+    implementation ("androidx.lifecycle:lifecycle-extensions:2.2.0")
 
     //roomDatabase
+
+    //proba
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
-//    kapt("androidx.room:room-compiler:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+//    ksp("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
+
+    //coorutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
 
 }
