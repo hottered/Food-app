@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
@@ -18,7 +19,9 @@ import com.example.dependencyinjection.pojo.Meal
 import com.example.dependencyinjection.viewModel.MealViewModel
 import com.example.dependencyinjection.viewModel.MealViewModelFactory
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class MealActivity : AppCompatActivity() {
@@ -54,17 +57,15 @@ class MealActivity : AppCompatActivity() {
         onYouTubeIconClicked()
 
         onFavouriteClick()
+
     }
 
     private fun onFavouriteClick() {
         binding.btnAddToFav.setOnClickListener {
-            Toast.makeText(this, "IMHERE", Toast.LENGTH_LONG).show()
-//            CoroutineScope(Dispatchers.IO).launch {
-//                mealToSave?.let { it1 ->
-//                    mealMvvm.insertMealIntoDatabase(it1)
-//                }
-            mealToSave?.let { it1 -> mealMvvm.insertMealIntoDatabase(it1) }
-//            }
+                mealToSave?.let {
+                        it1 -> mealMvvm.insertMealIntoDatabase(it1)
+                }
+                Toast.makeText(this,"Added to base",Toast.LENGTH_LONG).show()
         }
     }
 

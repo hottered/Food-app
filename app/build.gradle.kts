@@ -4,9 +4,12 @@ plugins {
 //    kotlin("kapt")
 
     id("kotlin-kapt")
+//    kotlin("kapt")
 }
 
 android {
+
+
     namespace = "com.example.dependencyinjection"
     compileSdk = 33
 
@@ -39,8 +42,12 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
 }
+
 dependencies {
+
+
 
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -53,7 +60,7 @@ dependencies {
 
     val nav_version = "2.3.5"
     val lifecycle_version = "2.4.0"
-    val room_version = "2.1.0-beta01"
+    val room_version = "2.5.2"
     //navigation-components
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
@@ -78,18 +85,22 @@ dependencies {
     //viewmodel
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:${lifecycle_version}")
     implementation ("androidx.lifecycle:lifecycle-extensions:2.2.0")
 
     //roomDatabase
 
-    //proba
     implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
-    kapt("androidx.room:room-compiler:$room_version")
-//    ksp("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
+
+    kapt("androidx.room:room-compiler:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
 
     //coorutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
+
+
+
 
 }
