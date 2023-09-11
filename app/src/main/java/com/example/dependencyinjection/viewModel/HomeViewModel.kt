@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.dependencyinjection.db.MealDatabase
 import com.example.dependencyinjection.pojo.Category
 import com.example.dependencyinjection.pojo.CategoryList
@@ -12,6 +13,7 @@ import com.example.dependencyinjection.pojo.MealList
 import com.example.dependencyinjection.pojo.MealsByCategoryList
 import com.example.dependencyinjection.pojo.MealsByCategory
 import com.example.dependencyinjection.retrofit.RetrofitInstance
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
 
@@ -92,7 +94,18 @@ class HomeViewModel(
 
             })
     }
-
+    fun deleteMealFromDatabase(meal: Meal){
+        viewModelScope.launch {
+//            Log.d("TAG!@#$","Hello from ${Thread.currentThread().name}")
+            mealDatabase.mealDao().deleteMeal(meal)
+        }
+    }
+    fun insertMealIntoDatabase(meal: Meal) {
+        viewModelScope.launch {
+//            Log.d("TAG!@#$","Hello from ${Thread.currentThread().name}")
+            mealDatabase.mealDao().insertOrUpdateMeal(meal)
+        }
+    }
     fun observeRandomMealLivedata(): LiveData<Meal> {
         return randomMealLiveData
     }

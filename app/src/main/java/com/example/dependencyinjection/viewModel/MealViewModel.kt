@@ -45,8 +45,14 @@ class MealViewModel(
 
     fun insertMealIntoDatabase(meal: Meal) {
         viewModelScope.launch {
-            Log.d("TAG!@#$","Hello from ${Thread.currentThread().name}")
+//            Log.d("TAG!@#$","Hello from ${Thread.currentThread().name}")
             mealDatabase.mealDao().insertOrUpdateMeal(meal)
+        }
+    }
+    fun deleteMealFromDatabase(meal: Meal){
+        viewModelScope.launch {
+//            Log.d("TAG!@#$","Hello from ${Thread.currentThread().name}")
+            mealDatabase.mealDao().deleteMeal(meal)
         }
     }
 

@@ -8,11 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.example.dependencyinjection.R
 import com.example.dependencyinjection.activites.MainActivity
 import com.example.dependencyinjection.adapters.FavoritesMealAdapter
 import com.example.dependencyinjection.databinding.FragmentFavoritesBinding
 import com.example.dependencyinjection.viewModel.HomeViewModel
+import com.google.android.material.snackbar.Snackbar
 
 class FavoritesFragment : Fragment() {
 
@@ -40,12 +43,40 @@ class FavoritesFragment : Fragment() {
         prepareRecView()
         observeFavorites()
 
+        val itemTouchHelper = object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+            ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ) : Boolean {
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val mealToDeleteOrUndo = favoritesMealAdapter.differ.currentList[position]
+                viewModel.deleteMealFromDatabase(mealToDeleteOrUndo)
+
+                Snackbar.make(requireView(), "Meal deleted",Snackbar.LENGTH_LONG).setAction(
+                    "Undo",
+                    View.OnClickListener {
+                        viewModel.insertMealIntoDatabase(mealToDeleteOrUndo)
+                    }
+                ).show()
+            }
+
+        }
+        ItemTouchHelper(itemTouchHelper).attachToRecyclerView(binding.rvFavorites)
+
     }
 
     private fun prepareRecView() {
-        favoritesMealAdapter= FavoritesMealAdapter()
+        favoritesMealAdapter = FavoritesMealAdapter()
         binding.rvFavorites.apply {
-            layoutManager = GridLayoutManager(context,2,GridLayoutManager.VERTICAL,false)
+            layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
             adapter = favoritesMealAdapter
         }
     }
@@ -56,9 +87,6 @@ class FavoritesFragment : Fragment() {
 
                 favoritesMealAdapter.differ.submitList(mealsList)
 
-//                mealsList.forEach {
-//                    println(it.idMeal)
-//                }
             })
     }
 }
