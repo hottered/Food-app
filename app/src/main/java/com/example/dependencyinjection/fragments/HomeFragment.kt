@@ -18,6 +18,7 @@ import com.example.dependencyinjection.activites.MealActivity
 import com.example.dependencyinjection.adapters.CategoriesAdapter
 import com.example.dependencyinjection.adapters.MostPopularMealsAdapter
 import com.example.dependencyinjection.databinding.FragmentHomeBinding
+import com.example.dependencyinjection.fragments.bottomSheet.MealBottomSheetFragment
 import com.example.dependencyinjection.pojo.Category
 import com.example.dependencyinjection.pojo.Meal
 import com.example.dependencyinjection.pojo.MealsByCategory
@@ -75,6 +76,15 @@ class HomeFragment : Fragment() {
         observeCategoriesLiveData()
         onCategoryItemClick()
 
+        onPopularItemLongClick()
+
+    }
+
+    private fun onPopularItemLongClick() {
+        popularItemsAdapter.onLongItemClick = {meal->
+            val mealBottomSheetFragment = MealBottomSheetFragment.newInstance(meal.idMeal)
+            mealBottomSheetFragment.show(childFragmentManager,"MEAL_INFO")
+        }
     }
 
     private fun onCategoryItemClick() {

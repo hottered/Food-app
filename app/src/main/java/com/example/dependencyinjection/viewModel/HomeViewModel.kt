@@ -15,6 +15,7 @@ import com.example.dependencyinjection.pojo.MealsByCategory
 import com.example.dependencyinjection.retrofit.RetrofitInstance
 import kotlinx.coroutines.launch
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 
 class HomeViewModel(
@@ -26,6 +27,7 @@ class HomeViewModel(
     private var categoriesLiveData = MutableLiveData<List<Category>>()
 
     private var favoritesMealsLiveData = mealDatabase.mealDao().getAllMeals()
+    private var bottomSheetLiveData = MutableLiveData<Meal>()
 
     fun getRandomMeal() {
         RetrofitInstance
@@ -82,8 +84,7 @@ class HomeViewModel(
                 ) {
                     if (response.body() != null) {
                         categoriesLiveData.value = response.body()!!.categories
-                    }else
-                    {
+                    } else {
                         return
                     }
                 }
@@ -94,17 +95,43 @@ class HomeViewModel(
 
             })
     }
-    fun deleteMealFromDatabase(meal: Meal){
+
+    fun deleteMealFromDatabase(meal: Meal) {
         viewModelScope.launch {
 //            Log.d("TAG!@#$","Hello from ${Thread.currentThread().name}")
             mealDatabase.mealDao().deleteMeal(meal)
         }
     }
+
     fun insertMealIntoDatabase(meal: Meal) {
         viewModelScope.launch {
 //            Log.d("TAG!@#$","Hello from ${Thread.currentThread().name}")
             mealDatabase.mealDao().insertOrUpdateMeal(meal)
         }
+    }
+
+    fun getMealById(id: String) {
+        RetrofitInstance
+            .api
+            .getMealDetails(id)
+            .enqueue(object : Callback<MealList> {
+                override fun onResponse(call: Call<MealList>, response: Response<MealList>) {
+                    val meal = response.body()?.meals?.first()
+                    meal?.let { mealss ->
+                        bottomSheetLiveData.postValue(mealss)
+                    }
+
+                }
+
+                override fun onFailure(call: Call<MealList>, t: Throwable) {
+                    Log.d("HomeVIewModel",t.message.toString())
+                }
+
+            })
+    }
+
+    fun observeBottomSheetMealLiveData() : LiveData<Meal>{
+        return  bottomSheetLiveData
     }
     fun observeRandomMealLivedata(): LiveData<Meal> {
         return randomMealLiveData
@@ -113,10 +140,12 @@ class HomeViewModel(
     fun observePopularItemsLivedata(): LiveData<List<MealsByCategory>> {
         return popoularMealsLiveData
     }
-    fun observeCategoriesLivedata() : LiveData<List<Category>>  {
+
+    fun observeCategoriesLivedata(): LiveData<List<Category>> {
         return categoriesLiveData
     }
-    fun observeFavoritesMealsLiveData() : LiveData<List<Meal>> {
+
+    fun observeFavoritesMealsLiveData(): LiveData<List<Meal>> {
         return favoritesMealsLiveData
     }
 }
