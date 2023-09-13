@@ -1,5 +1,6 @@
 package com.example.dependencyinjection.viewModel
 
+import android.icu.text.StringSearch
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -28,6 +29,8 @@ class HomeViewModel(
 
     private var favoritesMealsLiveData = mealDatabase.mealDao().getAllMeals()
     private var bottomSheetLiveData = MutableLiveData<Meal>()
+    
+    private var searchedMealsLiveData = MutableLiveData<List<Meal>>()
 
     fun getRandomMeal() {
         RetrofitInstance
@@ -95,7 +98,28 @@ class HomeViewModel(
 
             })
     }
+    
+    fun searchMeals(searchQuery: String) = 
+        RetrofitInstance
+            .api
+            .searchMeals(searchQuery)
+            .enqueue(object : Callback<MealList>{
+        override fun onResponse(call: Call<MealList>, response: Response<MealList>) {
+             val mealsList = response.body()?.meals
+            mealsList?.let { 
+                searchedMealsLiveData.postValue(it)
+            }
+        }
 
+        override fun onFailure(call: Call<MealList>, t: Throwable) {
+            Log.d("HomeFragment", t.message.toString())
+        }
+
+    })
+
+    fun observeSearchedMealsLivedata() : LiveData<List<Meal>>{
+        return searchedMealsLiveData
+    }
     fun deleteMealFromDatabase(meal: Meal) {
         viewModelScope.launch {
 //            Log.d("TAG!@#$","Hello from ${Thread.currentThread().name}")

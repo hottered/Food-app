@@ -5,12 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.dependencyinjection.databinding.MealItemBinding
 import com.example.dependencyinjection.pojo.Meal
 
-class FavoritesMealAdapter : RecyclerView.Adapter<FavoritesMealAdapter.FavoritesMealViewHolder>() {
+class MealsAdapter : RecyclerView.Adapter<MealsAdapter.FavoritesMealViewHolder>() {
 
     inner class FavoritesMealViewHolder(val binding:MealItemBinding): RecyclerView.ViewHolder(binding.root)
 
