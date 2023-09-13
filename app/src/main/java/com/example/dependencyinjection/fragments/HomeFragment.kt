@@ -79,28 +79,28 @@ class HomeFragment : Fragment() {
         onCategoryItemClick()
 
         onPopularItemLongClick()
-        
+
         onSearchIconClick()
 
     }
 
     private fun onSearchIconClick() {
-        binding.imgSearch.setOnClickListener { 
+        binding.imgSearch.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_searchFragment)
         }
     }
 
     private fun onPopularItemLongClick() {
-        popularItemsAdapter.onLongItemClick = {meal->
+        popularItemsAdapter.onLongItemClick = { meal ->
             val mealBottomSheetFragment = MealBottomSheetFragment.newInstance(meal.idMeal)
-            mealBottomSheetFragment.show(childFragmentManager,"MEAL_INFO")
+            mealBottomSheetFragment.show(childFragmentManager, "MEAL_INFO")
         }
     }
 
     private fun onCategoryItemClick() {
-        categoriesAdapter.onItemClick = {category ->
-            val intent = Intent(activity,CategoryMealsActivity::class.java)
-            intent.putExtra(CATEGORY_NAME,category.strCategory)
+        categoriesAdapter.onItemClick = { category ->
+            val intent = Intent(activity, CategoryMealsActivity::class.java)
+            intent.putExtra(CATEGORY_NAME, category.strCategory)
             startActivity(intent)
 
         }
